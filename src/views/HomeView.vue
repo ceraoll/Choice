@@ -17,7 +17,7 @@ import FooterSection from '@/components/FooterSection.vue';
       </p>
       <div class="border-b w-full"></div>
     </section>
-    <section class="py-8 px-12 md:py-16 md:px-28 flex flex-col items-center justify-center gap-16 w-full">
+    <section class="py-8 px-12 md:py-16 md:px-28 flex flex-col items-center justify-center gap-16 w-full ">
       <h2 class="md:text-5xl font-semibold">
         Criteria Table
       </h2>

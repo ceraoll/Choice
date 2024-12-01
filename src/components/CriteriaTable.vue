@@ -1,6 +1,6 @@
 <template>
-  <div class="overflow-x-auto w-full">
-    <table class="table-auto border-collapse w-full bg-white shadow-md rounded-lg">
+  <div class="overflow-x-auto w-full ">
+    <table class="min-w-[576px] table-auto border-collapse w-full bg-white shadow-md rounded-lg">
       <thead>
         <tr class="bg-[#E1E9F6] text-[#697E93]">
           <th class="px-4 py-2 border border-[#708DAA] text-left">Kode</th>

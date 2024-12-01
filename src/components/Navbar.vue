@@ -14,9 +14,9 @@ import { ref } from 'vue';
 			<div class="container mx-auto px-4 py-4 flex items-center gap-8">
 				<!-- Logo -->
 				<div class="text-2xl font-bold text-gray-800 flex-grow">
-					<a href="/">
+					<router-link :to="{name: 'home'}">
 						<img src="/image/brand-logo.svg" alt="Choice Logo">
-					</a>
+					</router-link>
 				</div>
 				
 				<!-- Navigation Links -->
@@ -26,11 +26,12 @@ import { ref } from 'vue';
 				
 				<!-- Button -->
 				<div>
-					<button
-						class="bg-[#213C57] text-[#BB99A0] font-bold tracking-wide px-8 py-2 rounded-lg hover:bg-[#192f46] transition"
+					<router-link
+            :to="{name: 'hitung'}"
+						class="bg-[#213C57] text-[#BB99A0] block font-bold tracking-wide px-8 py-2 rounded-lg hover:bg-[#192f46] transition"
 					>
 						Hitung
-					</button>
+          </router-link>
 				</div>
 	
 				<!-- Mobile Menu Button -->
