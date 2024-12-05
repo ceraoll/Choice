@@ -1,13 +1,13 @@
 <template>
-  <div v-if="showModal" class="fixed w-screen top-0 left-0 z-50 h-screen overflow-hidden flex justify-center items-center">
-    <div class="w-full h-full absolute top-0 left-0 bg-black/60" @click="handleCancel"></div>
-    <div class="bg-white w-6/12 z-50">
+  <div v-if="showModal" class="fixed top-0 left-0 z-50 flex items-center justify-center w-screen h-screen overflow-hidden">
+    <div class="absolute top-0 left-0 w-full h-full bg-black/60" @click="handleCancel"></div>
+    <div class="z-50 w-6/12 bg-white">
       <div>
-        <div class="flex flex-row justify-between items-center py-8 px-8">
+        <div class="flex flex-row items-center justify-between px-8 py-8">
           <h2 class="text-xl">Tambah Data Laptop</h2>
           <span
             @click="handleCancel" 
-            class="w-8 h-8 bg-slate-200 hover:bg-slate-300 transition cursor-pointer content-center text-center rounded-full">X</span>
+            class="content-center w-8 h-8 text-center transition rounded-full cursor-pointer bg-slate-200 hover:bg-slate-300">X</span>
         </div>
         <div class="w-full border-b border-black"></div>
       </div>
@@ -84,41 +84,30 @@
                 @bindValue="(e) => formData.resolution = e "
               /> 
             </div>
-            
-            <!-- Tipe Processor -->
-            <div class="my-8">
-              <InputSelect 
-                :items="items.processorType" 
-                label="Tipe Processor"
-                placeholder="Ex: Intel I5"
-                @bindValue="(e) => formData.processorType = e "
-              /> 
-            </div>
-            
-            <!-- Generasi Processor -->
-            <div class="my-8">
-              <InputSelect 
-                :items="items.processorGeneration" 
-                label="Generasi Processor"
-                placeholder="Ex: 12th Gen"
-                @bindValue="(e) => formData.processorGeneration = e "
-              /> 
-            </div>
 
+            <div class="my-8">
+              <InputSelect
+                :items="items.processor"
+                label="Processor"
+                placeholder="Ex: Intel Core i7-13100K"
+                @bindValue="(e) => formData.processor = e " 
+              />
+            </div>
+            
           </div>
 
           <!-- Buttons -->
-          <div class="flex justify-end space-x-4 pt-4">
+          <div class="flex justify-end pt-4 space-x-4">
             <button
               type="button"
               @click="handleCancel"
-              class="px-4 py-2 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300"
+              class="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300"
             >
               Cancel
             </button>
             <button
               type="submit"
-              class="px-4 py-2 rounded-md bg-green-500 text-white hover:bg-green-600"
+              class="px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600"
             >
               Simpan
             </button>
@@ -152,9 +141,10 @@ export default {
         RAMCapacity: "",
         RAMSpeed: "",
         resolution: "",
-        processorType: "",
-        processorGeneration: ""
+        processor: ""
       }),
+      processorType: "",
+      processorGeneration: "",
       items: {
         ROMCapacity: [
           {
@@ -219,13 +209,40 @@ export default {
           },
         ],
         resolution: [
-
+          {
+            label: "1280x720 (HD)",
+            value: "HD",
+          },
+          {
+            label: "1920x1080 (FHD)",
+            value: "FHD",
+          },
+          {
+            label: "2560x1440 (2k, QHD)",
+            value: "2K",
+          },
+          {
+            label: "3840x2160 (4K, UHD)",
+            value: "4K",
+          },
         ],
-        processorType: [
-
-        ],
-        processorGeneration: [
-
+        processor: [
+          {
+            label: "Intel Core i7 13th Gen",
+            value: "Intel Core i7 13th Gen",
+          },
+          {
+            label: "AMD Ryzen 9 7950X",
+            value: "AMD Ryzen 9 7950X",
+          },
+          {
+            label: "Intel Core i9-13900K",
+            value: "Intel Core i9-13900K",
+          },
+          {
+            label: "AMD Ryzen 5 5600X",
+            value: "AMD Ryzen 5 5600X",
+          },
         ],
       }
     };
@@ -235,7 +252,24 @@ export default {
    InputText
   },
   methods: {
+    validateForm (value) {
+      if (typeof value === 'object' && value !== null) {
+        for (const v of Object.values(value)) {
+          if (this.validateForm(v)) return true;
+        }
+      }
+
+      return (
+        value === undefined ||
+        value === null ||
+        (typeof value === 'object' && Object.keys(value).length === 0) ||
+        (typeof value === 'string' && value.trim().length === 0)
+      );
+    },
     handleSubmit() {
+      console.log(this.formData)
+      console.log(this.validateForm(this.formData))
+      if(this.validateForm(this.formData)) return;
       console.log("Form submitted:", this.formData);
     },
     handleCancel() {
