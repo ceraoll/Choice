@@ -13,7 +13,7 @@
       </div>
       <div class="px-8 py-4">
         <form @submit.prevent="handleSubmit">
-          <div class="max-h-[320px] overflow-y-auto pb-48">
+          <div class="max-h-screen pb-48 overflow-y-auto">
 
             <!-- Merk dan Tipe Laptop -->
             <div class="my-8">
