@@ -33,11 +33,42 @@ export async function login(username, password) {
   }
 }
 
+export async function register(username, password) {
+  try {
+    await axios.post(`${API}/register`, {
+      username: username,
+      password: password,
+    });
+
+    toast.success("Account successfully created");
+  } catch (error) {
+    if (error.response && error.response.data) {
+      toast.error(error.response.data.error); 
+    } else {
+      toast.error('Something went wrong. Please try again.');
+    }
+  }
+}
+
+export async function checkUsername (username) {
+  try {
+    const response = await axios.get(`${API}/check-username`, {
+      params: {
+        username: username,
+      },
+    });
+    return response.data.isAvailable;
+  } catch (err) {
+    console.error('Error checking username:', err);
+    return false
+  }
+}
+
 export function logout() {
   // Clear tokens and redirect
   localStorage.removeItem('accessToken');
   localStorage.removeItem('refreshToken');
   toast.success("Successfully Logout");
   useAuthState.isLoggedIn = false;
-  router.go()
+  router.go(0);
 }

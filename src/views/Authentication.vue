@@ -51,7 +51,7 @@
           <h1 class="text-6xl font-bold tracking-wide">Register</h1>
           <form @submit.prevent="handleRegister()">
             <!-- Username -->
-            <div class="py-4 grid grid-cols-5 items-center">
+            <div class="py-4 grid grid-cols-5 items-center relative">
               <label for="username" class="font-medium text-xl py-4 col-span-2">Username</label>
               <input
                 id="username"
@@ -59,6 +59,24 @@
                 v-model="usernameRegister"
                 class="col-span-3 px-6 py-4 border border-black rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
+              <div
+                class="absolute right-4 inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] text-black"
+                role="status" v-if="checkingUsername">
+                <span
+                  class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+                  >Loading...</span
+                >
+              </div>
+              <div class="!absolute right-4" v-if="usernameAvailable && usernameRegister.length > 0">
+                <svg class="h-6 w-6 text-green-500"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+              <div class="!absolute right-4" v-if="!usernameAvailable && usernameRegister.length > 0">
+                <svg class="h-6 w-6 text-red-500"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
             </div>
 
             <!-- Password -->
@@ -95,7 +113,7 @@
               type="submit"
               class=" bg-[#213C57] text-[#BB99A0] font-semibold tracking-wide text-lg py-2 px-4 rounded-lg hover:bg-[#162738] transition duration-300"
               >
-              REGISTER
+              {{ (loading) ? "LOADING" : "REGISTER" }}
             </button>
           </div>
           </form>
@@ -106,7 +124,7 @@
 </template>
 
 <script>
-import { login, logout, useAuthState } from "@/utils/useAuth";
+import { checkUsername, login, logout, register, useAuthState } from "@/utils/useAuth";
 import { useToast } from "vue-toastification";
 
 export default {
@@ -114,6 +132,8 @@ export default {
     return {
       isRegister: false,
       loading: false,
+      checkingUsername: false,
+      usernameAvailable: false,
       usernameRegister: '',
       passwordRegister: '',
       confirmPassword: '',
@@ -128,6 +148,22 @@ export default {
         konfirmasiPasswordKosong: "Isi konfirmasi password!",
         konfirmasiPassword: "Password tidak sama!"
       }
+    }
+  },
+  watch: {
+    usernameRegister: async function() {
+      this.checkingUsername = true;
+      this.usernameAvailable = false;
+      if(this.usernameRegister.length > 3) {
+        const isAvailable = await checkUsername(this.usernameRegister); // Wait for the async function to resolve
+        
+        if(this.usernameRegister.length > 0) {
+          this.usernameAvailable = isAvailable; // Update the availability state
+        } else {
+          this.usernameAvailable = false
+        }
+      }
+      this.checkingUsername = false;
     }
   },
   methods: {
@@ -189,7 +225,14 @@ export default {
     handleRegister() {
       this.validateForm();
       this.loading = true;
-      logout();
+      register(this.usernameRegister, this.passwordRegister);
+      this.username = this.usernameRegister;
+      this.password = this.passwordRegister;
+      this.usernameRegister = "";
+      this.passwordRegister = "";
+      this.confirmPassword = "";
+      this.loading = false;
+      this.isRegister = false;
     },
   }
 }
