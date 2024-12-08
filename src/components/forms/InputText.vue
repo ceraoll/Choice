@@ -6,7 +6,8 @@
     :placeholder="placeholder ?? label"
     :id="label"
     :type="type"
-    class="py-4 px-4 block w-full rounded-sm border border-slate-400 focus:shadow-sm focus:outline-none focus:border-slate-700 transition"
+    :required="!!required"
+    class="block w-full px-4 py-4 transition border rounded-sm border-slate-400 focus:shadow-sm focus:outline-none focus:border-slate-700"
   />
 </template>
 
@@ -26,6 +27,11 @@ export default {
       type: String,
       required: false,
       default: 'text'
+    },
+    required: {
+      type: Boolean,
+      required: false,
+      default: false,
     }
   },
   data() {
