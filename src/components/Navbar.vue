@@ -21,7 +21,7 @@ import { ref } from 'vue';
 				
 				<!-- Navigation Links -->
 				<div class="hidden md:flex space-x-8 text-[#486284]">
-					<a href="#" class="text-inherit hover:text-gray-800 transition">About Us</a>
+					<router-link :to="{ name: 'about' }" class="text-inherit hover:text-gray-800 transition">About Us</router-link>
 				</div>
 				
 				<!-- Button -->
