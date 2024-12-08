@@ -8,13 +8,13 @@
           WITH US
         </div>
     </div>
-    <div class="md:absolute md:right-16 md:rounded-3xl border border-slate-400 md:top-1/2 md:-translate-y-1/2 md:w-1/2 bg-white shadow-darken p-16">
+    <div class="p-16 bg-white border md:absolute md:right-16 md:rounded-3xl border-slate-400 md:top-1/2 md:-translate-y-1/2 md:w-1/2 shadow-darken">
       <transition name="fade" mode="out-in">
         <div v-if="!isRegister" class="py-6">
           <h1 class="text-6xl font-bold tracking-wide">Login</h1>
           <form @submit.prevent="handleLogin()">
-            <div class="py-4 grid grid-cols-5 items-center">
-              <label for="username" class="font-medium text-xl py-4 col-span-2">Username</label>
+            <div class="grid items-center grid-cols-5 py-4">
+              <label for="username" class="col-span-2 py-4 text-xl font-medium">Username</label>
               <input
                 id="username"
                 type="text"
@@ -23,8 +23,8 @@
               />
             </div>
 
-            <div class="py-4 grid grid-cols-5 items-center">
-              <label for="password" class="font-medium text-xl py-4 col-span-2">Password</label>
+            <div class="grid items-center grid-cols-5 py-4">
+              <label for="password" class="col-span-2 py-4 text-xl font-medium">Password</label>
               <input
                 id="password"
                 type="password"
@@ -33,7 +33,7 @@
               />
             </div>
 
-            <div class="grid grid-cols-2 my-8 items-center">
+            <div class="grid items-center grid-cols-2 my-8">
               <p class="text-gray-600">
                 Don't have an account?
                 <span @click="isRegister = true;" class="cursor-pointer hover:underline text-[#BB99A0] font-bold text-xl">Register</span>
@@ -51,8 +51,8 @@
           <h1 class="text-6xl font-bold tracking-wide">Register</h1>
           <form @submit.prevent="handleRegister()">
             <!-- Username -->
-            <div class="py-4 grid grid-cols-5 items-center relative">
-              <label for="username" class="font-medium text-xl py-4 col-span-2">Username</label>
+            <div class="relative grid items-center grid-cols-5 py-4">
+              <label for="username" class="col-span-2 py-4 text-xl font-medium">Username</label>
               <input
                 id="username"
                 type="text"
@@ -68,20 +68,20 @@
                 >
               </div>
               <div class="!absolute right-4" v-if="usernameAvailable && usernameRegister.length > 0">
-                <svg class="h-6 w-6 text-green-500"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="w-6 h-6 text-green-500"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
               </div>
               <div class="!absolute right-4" v-if="!usernameAvailable && usernameRegister.length > 0">
-                <svg class="h-6 w-6 text-red-500"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="w-6 h-6 text-red-500"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
               </div>
             </div>
 
             <!-- Password -->
-            <div class="py-4 grid grid-cols-5 items-center">
-              <label for="password" class="font-medium text-xl py-4 col-span-2">Password</label>
+            <div class="grid items-center grid-cols-5 py-4">
+              <label for="password" class="col-span-2 py-4 text-xl font-medium">Password</label>
               <input
                 id="password"
                 type="password"
@@ -91,8 +91,8 @@
             </div>
 
             <!-- Re-enter Password -->
-            <div class="py-4 grid grid-cols-5 items-center">
-              <label for="confirmPassword" class="font-medium text-xl py-4 col-span-2">Re-enter Password</label>
+            <div class="grid items-center grid-cols-5 py-4">
+              <label for="confirmPassword" class="col-span-2 py-4 text-xl font-medium">Re-enter Password</label>
               <input
                 id="confirmPassword"
                 type="password"
@@ -103,7 +103,7 @@
 
             
             <!-- Submit Button -->
-            <div class="grid grid-cols-2 my-8 items-center">
+            <div class="grid items-center grid-cols-2 my-8">
               <!-- Login Link -->
               <p class="text-gray-600">
                 Already have an account?
@@ -219,7 +219,8 @@ export default {
     async handleLogin() {
       if (!this.validateForm()) return;
       this.loading = true;
-      login(this.username, this.password);
+      await login(this.username, this.password);
+      this.loading = false;
     },
 
     handleRegister() {

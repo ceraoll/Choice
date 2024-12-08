@@ -24,6 +24,7 @@ import TabMenu from './TabMenu.vue';
 import TabView from './TabView.vue';
 import TabKriteria from './Tabs/TabKriteria.vue';
 import TabLaptop from './Tabs/TabLaptop.vue';
+import TabNilaiAlternatifLaptop from './Tabs/TabNilaiAlternatifLaptop.vue';
 
 export default {
   components: {
@@ -31,13 +32,14 @@ export default {
     TabView,
     TabKriteria,
     TabLaptop,
+    TabNilaiAlternatifLaptop
   },
   data() {
     return {
       tabs: [
         { id: 'tab1', title: 'Data Kriteria', content: 'TabKriteria' },
         { id: 'tab2', title: 'Data Laptop', content: 'TabLaptop' },
-        { id: 'tab3', title: 'Penilaian Laptop', content: 'TabPenilaian' },
+        { id: 'tab3', title: 'Penilaian Laptop', content: 'TabNilaiAlternatifLaptop' },
         { id: 'tab4', title: 'Hasil Perhitungan', content: 'TabHasil' }
       ],
       activeTab: 'tab1'

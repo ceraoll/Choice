@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import CriteriaTable from '@/components/CriteriaTable.vue';
 import Tabs from '@/components/Tabs.vue';
 </script>

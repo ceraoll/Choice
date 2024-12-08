@@ -21,6 +21,9 @@ export async function login(username, password) {
 
     localStorage.setItem('accessToken', response.data.accessToken);
     localStorage.setItem('refreshToken', response.data.refreshToken);
+
+    localStorage.setItem('userInfo', JSON.stringify(response.data.userInfo));
+
     useAuthState.isLoggedIn = true;
     router.go(-1);
     toast.success("Successfully Login");
@@ -60,7 +63,7 @@ export async function checkUsername (username) {
     return response.data.isAvailable;
   } catch (err) {
     console.error('Error checking username:', err);
-    return false
+    throw err;
   }
 }
 

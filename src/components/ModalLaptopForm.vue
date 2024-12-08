@@ -123,6 +123,16 @@ import { reactive } from 'vue';
 import InputSelect from './forms/InputSelect.vue';
 import InputText from './forms/InputText.vue';
 import axios from 'axios';
+import {
+  getBrand,
+  getKapasitasROM,
+  getKapasitasRAM,
+  getKecepatanRAM,
+  getResolusi,
+  getTipeProcessor,
+  getGenerasiProcessor,
+  insertLaptop,
+} from "@/utils/useCriteria";
 const env = import.meta.env;
 
 export default {
@@ -143,8 +153,8 @@ export default {
         RAMCapacity: "",
         RAMSpeed: "",
         resolution: "",
-        processor: ""
       }),
+      brand: "",
       processorType: "",
       processorGeneration: "",
       items: {
@@ -161,47 +171,79 @@ export default {
       }
     };
   },
-  async created() {
-    try {
-      // Fetch ROM capacity
-      const romResponse = await axios.get(`${env.VITE_CHOICE_API}/kapasitas_rom`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
-      });
-      this.items.ROMCapacity = romResponse.data;
-
-      // Fetch RAM capacity
-      const ramResponse = await axios.get(`${env.VITE_CHOICE_API}/kapasitas_ram`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
-      });
-      this.items.RAMCapacity = ramResponse.data;
-
-      // Fetch RAM speed
-      const ramSpeedResponse = await axios.get(`${env.VITE_CHOICE_API}/kecepatan_ram`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
-      });
-      this.items.RAMSpeed = ramSpeedResponse.data;
-
-      // Fetch resolution
-      const resolutionResponse = await axios.get(`${env.VITE_CHOICE_API}/resolusi`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
-      });
-      this.items.resolution = resolutionResponse.data;
-
-      // Fetch processor
-      const processorResponse = await axios.get(`${env.VITE_CHOICE_API}/generasi_processor`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
-      });
-      this.items.processor = processorResponse.data;
-
-    } catch (err) {
-      console.error('Error fetching data:', err);
-    }
-  },
   components: {
    InputSelect,
    InputText
   },
   methods: {
+    async fetchData() {
+      try {
+        // Parallel fetch untuk efisiensi
+        const [
+          brandData,
+          romCapacityData,
+          ramCapacityData,
+          ramSpeedData,
+          resolutionData,
+          tipeProcessorData,
+          generasiProcessorData,
+        ] = await Promise.all([
+          getBrand(),
+          getKapasitasROM(),
+          getKapasitasRAM(),
+          getKecepatanRAM(),
+          getResolusi(),
+          getTipeProcessor(),
+          getGenerasiProcessor(), // Misalnya RAMCapacity diisi oleh generasi processor
+        ]);
+
+        // Assign data ke items
+        this.items.ROMCapacity = romCapacityData || [];
+        this.items.RAMCapacity = ramCapacityData || [];
+        this.items.RAMSpeed = ramSpeedData || [];
+        this.items.resolution = resolutionData || [];
+
+        const groupedProcessors = [];
+
+        const brands = brandData.map((brand) => ({
+          id: brand.id,
+          label: brand.label,
+        }));
+
+        // Group data by brand_id
+        brands.forEach((brand) => {
+          const tipeProcessors = tipeProcessorData.filter(
+            (item) => item.brand_id === brand.id
+          );
+
+          const generasiProcessors = generasiProcessorData.filter(
+            (item) => item.brand_id === brand.id
+          );
+
+          let autoIncrementId = 1;
+
+          tipeProcessors.forEach((tipe) => {
+            generasiProcessors.forEach((generasi) => {
+              groupedProcessors.push({
+                id: autoIncrementId++, // Auto-increment ID
+                label: `${brand.label} ${tipe.label} ${generasi.label}`, // Concatenated label
+                value: {
+                  tipe: tipe.value,
+                  generasi: generasi.value
+                }
+              });
+            });
+          });
+        });
+
+
+        this.items.processor = groupedProcessors;
+      } catch (error) {
+        console.error("Gagal mengambil data:", error);
+      } finally {
+        this.loading = false; 
+      }
+    },
     validateForm (value) {
       if (typeof value === 'object' && value !== null) {
         for (const v of Object.values(value)) {
@@ -216,11 +258,10 @@ export default {
         (typeof value === 'string' && value.trim().length === 0)
       );
     },
-    handleSubmit() {
-      console.log(this.formData)
-      console.log(this.validateForm(this.formData))
+    async handleSubmit() {
       if(this.validateForm(this.formData)) return;
-      console.log("Form submitted:", this.formData);
+      const response = await insertLaptop(this.formData);
+      console.log(response);
     },
     handleCancel() {
       this.formData = {
@@ -236,5 +277,8 @@ export default {
       this.$emit('close');
     },
   },
+  mounted() {
+    this.fetchData();
+  }
 };
 </script>

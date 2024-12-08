@@ -90,7 +90,7 @@ export default {
       );
 
       if (match) {
-        this.$emit('bindValue', match.value);
+        this.$emit('bindValue', match);
         this.arrowCounter = -1;
       } 
     },
@@ -98,7 +98,7 @@ export default {
       if (typeof result === 'object' && !Array.isArray(result) && result !== null) {
         this.search = result.label;
         this.isOpen = false;
-        this.$emit('bindValue', result.value)
+        this.$emit('bindValue', result)
         this.arrowCounter = -1;
       }
     },

@@ -30,7 +30,7 @@
 </style>
 
 <script>
-import { getLaptop } from "@/utils/useLaptop";
+import { getNilaiAlternatifLaptop } from "@/utils/useLaptop";
 import { ref, onMounted } from "vue";
 export default {
   setup() {
@@ -42,7 +42,8 @@ export default {
       { kode: "C4", nama: "Kapasitas RAM" },
       { kode: "C5", nama: "Kecepatan RAM" },
       { kode: "C6", nama: "Resolusi Layar" },
-      { kode: "C7", nama: "Processor" },
+      { kode: "C7", nama: "Tipe Processor" },
+      { kode: "C8", nama: "GenerasiProcessor" },
     ];
 
     const data = ref([]); // Reactive variable for laptop data
@@ -50,16 +51,17 @@ export default {
     // Fetch data
     onMounted(async () => {
       try {
-        const response = await getLaptop();
+        const response = await getNilaiAlternatifLaptop();
         data.value = response.map((laptop) => ({
           nama: laptop.nama_laptop,
-          harga: "Rp. " + laptop.harga,
-          berat: laptop.berat + " KG",
+          harga: laptop.harga,
+          berat: laptop.berat,
           kapasitas_rom: laptop.kapasitas_rom,
           kapasitas_ram: laptop.kapasitas_ram,
           kecepatan_ram: laptop.kecepatan_ram,
           resolusi: laptop.resolusi,
-          processor: laptop.processor,
+          tipe_processor: laptop.tipe_processor,
+          generasi_processor: laptop.generasi_processor,
         }));
       } catch (error) {
         console.error("Failed to fetch laptop data:", error);
