@@ -10,7 +10,7 @@ export default {
 }
 </script>
 <template>
-  <div>
+  <div class="h-full">
     <Navbar />
     <router-view v-slot="{ Component }">
       <transition name="fade" mode="out-in">
@@ -24,6 +24,11 @@ export default {
   html {
     scroll-behavior: smooth;
   }
+
+  html, body {
+   height: calc(100% - 72px);
+  }
+  
   .fade-enter-active,
   .fade-leave-active {
     transition: opacity 0.4s ease-in-out;

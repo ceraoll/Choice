@@ -13,7 +13,7 @@
       </div>
       <div class="px-8 py-4">
         <form @submit.prevent="handleSubmit">
-          <div class="max-h-screen pb-48 overflow-y-auto">
+          <div class="h-[480px] pb-48 overflow-y-auto">
 
             <!-- Merk dan Tipe Laptop -->
             <div class="my-8">
@@ -122,6 +122,8 @@
 import { reactive } from 'vue';
 import InputSelect from './forms/InputSelect.vue';
 import InputText from './forms/InputText.vue';
+import axios from 'axios';
+const env = import.meta.env;
 
 export default {
   props: {
@@ -147,105 +149,53 @@ export default {
       processorGeneration: "",
       items: {
         ROMCapacity: [
-          {
-            label: "128GB",
-            value: 128
-          },
-          {
-            label: "256GB",
-            value: 256
-          },
-          {
-            label: "512GB",
-            value: 512
-          },
-          {
-            label: "1024GB (1TB)",
-            value: 1024
-          },
         ],
         RAMCapacity: [
-          {
-            label: '4GB',
-            value: 4
-          },
-          {
-            label: '8GB',
-            value: 8
-          },
-          {
-            label: '16GB',
-            value: 16
-          },
-          {
-            label: '32GB',
-            value: 32
-          },
-          {
-            label: '64GB',
-            value: 64
-          },
         ],
         RAMSpeed: [
-          {
-            label: '2400MHz',
-            value: 2400
-          },
-          {
-            label: '2666MHz',
-            value: 2666
-          },
-          {
-            label: '3200MHz',
-            value: 3200
-          },
-          {
-            label: '4800MHz',
-            value: 4800
-          },
-          {
-            label: '6400MHz',
-            value: 6400
-          },
         ],
         resolution: [
-          {
-            label: "1280x720 (HD)",
-            value: "HD",
-          },
-          {
-            label: "1920x1080 (FHD)",
-            value: "FHD",
-          },
-          {
-            label: "2560x1440 (2k, QHD)",
-            value: "2K",
-          },
-          {
-            label: "3840x2160 (4K, UHD)",
-            value: "4K",
-          },
         ],
         processor: [
-          {
-            label: "Intel Core i7 13th Gen",
-            value: "Intel Core i7 13th Gen",
-          },
-          {
-            label: "AMD Ryzen 9 7950X",
-            value: "AMD Ryzen 9 7950X",
-          },
-          {
-            label: "Intel Core i9-13900K",
-            value: "Intel Core i9-13900K",
-          },
-          {
-            label: "AMD Ryzen 5 5600X",
-            value: "AMD Ryzen 5 5600X",
-          },
         ],
       }
     };
+  },
+  async created() {
+    try {
+      // Fetch ROM capacity
+      const romResponse = await axios.get(`${env.VITE_CHOICE_API}/kapasitas_rom`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
+      });
+      this.items.ROMCapacity = romResponse.data;
+
+      // Fetch RAM capacity
+      const ramResponse = await axios.get(`${env.VITE_CHOICE_API}/kapasitas_ram`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
+      });
+      this.items.RAMCapacity = ramResponse.data;
+
+      // Fetch RAM speed
+      const ramSpeedResponse = await axios.get(`${env.VITE_CHOICE_API}/kecepatan_ram`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
+      });
+      this.items.RAMSpeed = ramSpeedResponse.data;
+
+      // Fetch resolution
+      const resolutionResponse = await axios.get(`${env.VITE_CHOICE_API}/resolusi`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
+      });
+      this.items.resolution = resolutionResponse.data;
+
+      // Fetch processor
+      const processorResponse = await axios.get(`${env.VITE_CHOICE_API}/generasi_processor`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
+      });
+      this.items.processor = processorResponse.data;
+
+    } catch (err) {
+      console.error('Error fetching data:', err);
+    }
   },
   components: {
    InputSelect,
