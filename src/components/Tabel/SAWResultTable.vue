@@ -15,7 +15,12 @@
       </thead>
       <tbody v-if="data.length">
         <tr v-for="(row, index) in data" :key="index" class="bg-[#FCFCFC] hover:bg-gray-100 text-[#8196AA]">
-          <td class="px-4 py-2 border border-[#708DAA]">{{ index+1 }}</td>
+          <td class="px-4 py-2 border border-[#708DAA] relative text-center max-w-16">
+            <img v-if="index == 0" src="/crown_6454551.png" alt="Winner badge" class="w-full">
+            <div v-else>
+              {{ index+1 }}
+            </div>
+          </td>
           <td v-for="(value, key) in row" :key="key" class="px-4 py-2 border border-[#708DAA]">
             <div v-if="key == 'harga'" class="overflow-x-auto whitespace-nowrap max-w-32">
               {{ value }}
@@ -64,7 +69,7 @@ export default {
       { id_header: "6", nama: "Kecepatan RAM" },
       { id_header: "7", nama: "Resolusi Layar" },
       { id_header: "8", nama: "Processor" },
-      { id_header: "9", nama: "Score SAW"}
+      { id_header: "9", nama: "SAW Score"}
     ];
     const criteria = ref([]);
 

@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import SAWResultTable from '../SAWResultTable.vue';
+import SAWResultTable from '../Tabel/SAWResultTable.vue';
 import ModalLaptopForm from '../ModalLaptopForm.vue';
 import { ref } from "vue";
 

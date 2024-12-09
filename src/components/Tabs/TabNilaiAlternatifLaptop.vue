@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import AlternativeValueTable from '../AlternativeValueTable.vue';
+import AlternativeValueTable from '../Tabel/AlternativeValueTable.vue';
 import ModalLaptopForm from '../ModalLaptopForm.vue';
 import { ref } from "vue";
 

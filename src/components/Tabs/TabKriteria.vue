@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import CriteriaTable from '../CriteriaTable.vue';
+import CriteriaTable from '../Tabel/CriteriaTable.vue';
 import IconSearch from '../ui/IconSearch.vue';
 
 </script>

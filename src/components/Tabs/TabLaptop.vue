@@ -28,7 +28,7 @@
 </template>
 
 <script setup>
-import LaptopTable from '../LaptopTable.vue';
+import LaptopTable from '../Tabel/LaptopTable.vue';
 import ModalLaptopForm from '../ModalLaptopForm.vue';
 import IconSearch from '../ui/IconSearch.vue';
 import { ref } from 'vue';

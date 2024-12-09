@@ -1,5 +1,5 @@
 <script setup>
-import CriteriaTable from '@/components/CriteriaTable.vue';
+import CriteriaTable from '@/components/Tabel/CriteriaTable.vue';
 import Tabs from '@/components/Tabs.vue';
 </script>
 
