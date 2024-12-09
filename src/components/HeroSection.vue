@@ -3,12 +3,12 @@
 </script>
 
 <template>
-  <div class="relative bg-gray-900 text-white">
+  <div class="relative text-white bg-gray-900">
     <!-- Background Image -->
     <img
       src="/image/ales-nesetril-Im7lZjxeLhg-unsplash.jpg"
       alt="Laptop Background"
-      class="absolute inset-0 w-full h-full object-cover opacity-60"
+      class="absolute inset-0 object-cover w-full h-full opacity-60"
     />
     <div class="relative z-10 flex flex-col items-center justify-center h-[calc(100dvh-72px)] text-center px-4">
       <!-- Title -->
@@ -18,16 +18,17 @@
         Help you recommend a Laptop
       </p>
       <!-- Button -->
-      <button
-        class="mt-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded transition"
+      <router-link
+        :to="{ name: 'hitung' }"
+        class="px-6 py-2 mt-6 font-semibold text-white transition bg-blue-600 rounded hover:bg-blue-700"
       >
         Hitung
-      </button>
+      </router-link>
     </div>
     <!-- Gradient Overlay -->
     <div
       class="absolute inset-0 bg-gradient-to-b from-gray-900 via-transparent to-gray-900 opacity-70"
     ></div>
-    <Scrolldown class="absolute bottom-8 z-50 left-1/2 -translate-x-1/2" />
+    <Scrolldown class="absolute z-50 -translate-x-1/2 bottom-8 left-1/2" />
   </div>
 </template>

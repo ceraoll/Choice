@@ -28,20 +28,20 @@
             <!-- Harga -->
             <div class="my-8">
               <InputText
-                type="text"
+                type="currency"
                 label="Harga"
                 placeholder="Rp."
-                @bindValue="(e) => formData.price = parseInt(e) "
+                @bindValue="(e) => formData.price = parseFloat(e) "
                 />
             </div>
             
             <!-- Berat -->
             <div class="my-8">
               <InputText
-                type="text"
+                type="decimal"
                 label="Berat"
-                placeholder="Kg"
-                @bindValue="(e) => formData.weight = parseInt(e) "
+                placeholder="0.0 Kg"
+                @bindValue="(e) => formData.weight = parseFloat(e) "
                 />
             </div>
             
@@ -122,6 +122,7 @@
 import { reactive } from 'vue';
 import InputSelect from './forms/InputSelect.vue';
 import InputText from './forms/InputText.vue';
+import { formatRupiah } from '@/utils/useFormatRupiah';
 import {
   getBrand,
   getKapasitasROM,

@@ -60,7 +60,7 @@
                 class="col-span-3 px-6 py-4 border border-black rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
               <div
-                class="absolute right-4 inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] text-black"
+                class="absolute right-5 inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] text-black"
                 role="status" v-if="checkingUsername">
                 <span
                   class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
