@@ -110,6 +110,16 @@ export async function getTipeProcessor() {
   }
 }
 
+export async function getCriteria() {
+  try {
+    const response = await axios.get(`${API}/criteria`);
+    return response.data;
+  } catch (err) {
+    toast.error("Gagal Mendapatkan Tipe Processor");
+    return false;
+  }
+}
+
 export async function insertLaptop(formData) {
   const { laptopType, price, weight, RAMCapacity, RAMSpeed, ROMCapacity, resolution, processor } = formData;
   try {

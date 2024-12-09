@@ -6,7 +6,7 @@
           <th class="px-4 py-2 border border-[#708DAA] text-left">
             No
           </th>
-          <th v-for="header in criteria" :key="header.kode" class="px-4 py-2 border border-[#708DAA] text-left">
+          <th v-for="header in tableHeaders" :key="header.id_header" class="px-4 py-2 border border-[#708DAA] text-left">
             {{ header.nama }}
           </th>
         </tr>
@@ -34,21 +34,20 @@ import { getNilaiAlternatifLaptop } from "@/utils/useLaptop";
 import { ref, onMounted } from "vue";
 export default {
   setup() {
-    const criteria = [
-      { kode: "nama", nama: "Nama"},
-      { kode: "C1", nama: "Harga" },
-      { kode: "C2", nama: "Berat" },
-      { kode: "C3", nama: "Kapasitas ROM" },
-      { kode: "C4", nama: "Kapasitas RAM" },
-      { kode: "C5", nama: "Kecepatan RAM" },
-      { kode: "C6", nama: "Resolusi Layar" },
-      { kode: "C7", nama: "Tipe Processor" },
-      { kode: "C8", nama: "GenerasiProcessor" },
+    const tableHeaders = [
+      { id_header: "1", nama: "Nama"},
+      { id_header: "2", nama: "Harga" },
+      { id_header: "3", nama: "Berat" },
+      { id_header: "4", nama: "Kapasitas ROM" },
+      { id_header: "5", nama: "Kapasitas RAM" },
+      { id_header: "6", nama: "Kecepatan RAM" },
+      { id_header: "7", nama: "Resolusi Layar" },
+      { id_header: "8", nama: "Tipe Processor" },
+      { id_header: "9", nama: "Generasi Processor" },
     ];
 
-    const data = ref([]); // Reactive variable for laptop data
+    const data = ref([]);
 
-    // Fetch data
     onMounted(async () => {
       try {
         const response = await getNilaiAlternatifLaptop();
@@ -64,12 +63,12 @@ export default {
           generasi_processor: laptop.generasi_processor,
         }));
       } catch (error) {
-        console.error("Failed to fetch laptop data:", error);
+        console.error("Failed to fetch Alternative Laptop Value data:", error);
       }
     });
 
 
-    return { criteria, data };
+    return { tableHeaders, data };
   },
 };
 </script>

@@ -22,7 +22,6 @@ export async function getLaptop() {
         user_id: getUserInfo().user_id, 
       },
     });
-    console.log("Laptop Data:", response.data);
     return response.data;
   } catch (err) {
     toast.error("Gagal Mendapatkan Data Laptop");
@@ -40,10 +39,9 @@ export async function getNilaiAlternatifLaptop() {
         user_id: getUserInfo().user_id, 
       },
     });
-    console.log("Laptop Data:", response.data);
     return response.data;
   } catch (err) {
-    toast.error("Gagal Mendapatkan Data Laptop");
+    toast.error("Gagal Mendapatkan Data Alternatif Laptop");
     return false;
   }
 }

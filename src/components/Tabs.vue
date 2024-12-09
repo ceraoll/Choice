@@ -22,6 +22,7 @@
 <script>
 import TabMenu from './TabMenu.vue';
 import TabView from './TabView.vue';
+import TabHasil from './Tabs/TabHasil.vue';
 import TabKriteria from './Tabs/TabKriteria.vue';
 import TabLaptop from './Tabs/TabLaptop.vue';
 import TabNilaiAlternatifLaptop from './Tabs/TabNilaiAlternatifLaptop.vue';
@@ -32,7 +33,8 @@ export default {
     TabView,
     TabKriteria,
     TabLaptop,
-    TabNilaiAlternatifLaptop
+    TabNilaiAlternatifLaptop,
+    TabHasil
   },
   data() {
     return {
