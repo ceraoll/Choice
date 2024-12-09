@@ -119,29 +119,3 @@ export async function getCriteria() {
     return false;
   }
 }
-
-export async function insertLaptop(formData) {
-  const { laptopType, price, weight, RAMCapacity, RAMSpeed, ROMCapacity, resolution, processor } = formData;
-  try {
-    const response = await axios.post(`${API}/laptop`, {
-      user_id: getUserInfo().user_id,
-      nama_laptop: laptopType,
-      harga: price,
-      berat: parseFloat(weight),
-      kapasitas_rom: ROMCapacity,
-      kapasitas_ram: RAMCapacity,
-      kecepatan_ram: RAMSpeed,
-      resolusi: resolution,
-      processor: processor,
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${getToken()}`,
-      },
-    });
-    return response.data;
-  } catch (err) {
-    toast.error("Gagal Menginput Laptop");
-    return false;
-  }
-}

@@ -122,7 +122,6 @@
 import { reactive } from 'vue';
 import InputSelect from './forms/InputSelect.vue';
 import InputText from './forms/InputText.vue';
-import axios from 'axios';
 import {
   getBrand,
   getKapasitasROM,
@@ -131,8 +130,8 @@ import {
   getResolusi,
   getTipeProcessor,
   getGenerasiProcessor,
-  insertLaptop,
 } from "@/utils/useCriteria";
+import { insertLaptop } from "@/utils/useLaptop";
 const env = import.meta.env;
 
 export default {
@@ -260,8 +259,7 @@ export default {
     },
     async handleSubmit() {
       if(this.validateForm(this.formData)) return;
-      const response = await insertLaptop(this.formData);
-      console.log(response);
+      await insertLaptop(this.formData);
     },
     handleCancel() {
       this.formData = {
@@ -273,7 +271,6 @@ export default {
         RAMCapacity: "",
         RAMSpeed: "",
       };
-      console.log("Form reset");
       this.$emit('close');
     },
   },

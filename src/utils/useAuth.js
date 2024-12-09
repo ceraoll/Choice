@@ -67,11 +67,26 @@ export async function checkUsername (username) {
   }
 }
 
-export function logout() {
-  // Clear tokens and redirect
-  localStorage.removeItem('accessToken');
-  localStorage.removeItem('refreshToken');
-  toast.success("Successfully Logout");
-  useAuthState.isLoggedIn = false;
-  router.go(0);
+export async function logout() {
+  try {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('userInfo');
+    useAuthState.isLoggedIn = false;
+    
+    router.go();
+    toast.success("Successfully Logout");
+
+  } catch (error) {
+    if (error.response && error.response.data) {
+      toast.error(error.response.data.error); 
+    } else {
+      toast.error('Something went wrong. Please try again.');
+    }
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('userInfo');
+    useAuthState.isLoggedIn = false;
+  }
+  
 }
