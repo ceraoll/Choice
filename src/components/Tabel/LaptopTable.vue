@@ -44,6 +44,7 @@
 
 <script>
 import { getLaptop } from "@/utils/useLaptop";
+import { formatRupiah } from "@/utils/useFormatRupiah";
 import { ref, onMounted, computed, watch } from "vue";
 export default {
   props: {
@@ -74,7 +75,7 @@ export default {
         const response = await getLaptop();
         data.value = response.map((laptop) => ({
           nama: laptop.nama_laptop,
-          harga: "Rp. " + laptop.harga,
+          harga: formatRupiah(Math.trunc(laptop.harga)),
           berat: laptop.berat + " KG",
           kapasitas_rom: laptop.kapasitas_rom,
           kapasitas_ram: laptop.kapasitas_ram,

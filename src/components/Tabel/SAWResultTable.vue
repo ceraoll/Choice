@@ -57,6 +57,7 @@
 <script>
 import { getCriteria } from "@/utils/useCriteria";
 import { getNilaiAlternatifLaptop, getLaptop } from "@/utils/useLaptop";
+import { formatRupiah } from "@/utils/useFormatRupiah";
 import { ref, onMounted } from "vue";
 export default {
   setup() {
@@ -102,7 +103,7 @@ export default {
         const responseLaptop = await getLaptop();
         const dataLaptop = responseLaptop.map((laptop) => ({
           nama: laptop.nama_laptop,
-          harga: "Rp. " + laptop.harga,
+          harga: formatRupiah(Math.trunc(laptop.harga)),
           berat: laptop.berat + " KG",
           kapasitas_rom: laptop.kapasitas_rom,
           kapasitas_ram: laptop.kapasitas_ram,
