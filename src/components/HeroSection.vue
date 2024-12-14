@@ -29,6 +29,6 @@
     <div
       class="absolute inset-0 bg-gradient-to-b from-gray-900 via-transparent to-gray-900 opacity-70"
     ></div>
-    <Scrolldown class="absolute z-50 -translate-x-1/2 bottom-8 left-1/2" />
+    <Scrolldown class="absolute z-20 -translate-x-1/2 bottom-8 left-1/2" />
   </div>
 </template>

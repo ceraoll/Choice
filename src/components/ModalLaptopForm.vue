@@ -205,7 +205,6 @@ export default {
           label: brand.label,
         }));
 
-        // Group data by brand_id
         brands.forEach((brand) => {
           const tipeProcessors = tipeProcessorData.filter(
             (item) => item.brand_id === brand.id
@@ -255,7 +254,7 @@ export default {
     },
     async handleSubmit() {
       if(this.validateForm(this.formData)) return;
-      if(berat)
+      if(typeof this.formData.weight !== 'number') return;
       await insertLaptop(this.formData);
     },
     handleCancel() {
