@@ -3,6 +3,10 @@ import HomeView from '../views/HomeView.vue'
 import HitungView from '@/views/HitungView.vue'
 import AboutView from '@/views/AboutView.vue'
 import Authentication from '@/views/Authentication.vue'
+import axios from 'axios'
+
+
+const API = import.meta.env.VITE_CHOICE_API;
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -34,16 +38,55 @@ const router = createRouter({
 });
 
 // Navigation Guard
-router.beforeEach((to, from, next) => {
-  const isAuthenticated = !!localStorage.getItem('accessToken'); // Check if token exists
+router.beforeEach(async (to, from, next) => {
+  const accessToken = localStorage.getItem('accessToken'); // Retrieve access token
+  const refreshToken = localStorage.getItem('refreshToken'); // Retrieve refresh token
+  const isAuthenticated = !!accessToken; // Check if access token exists
 
   if (to.meta.requiresAuth && !isAuthenticated) {
-    next('/authenticate'); 
-  } else if (to.name === 'authenticate' && isAuthenticated) {
-    next(from.fullPath || '/');
-  } else {
-    next(); 
+    return next('/authenticate');
   }
+
+  if (isAuthenticated) {
+    try {
+      await axios.get(`${API}/userinfo`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      return next();
+    } catch (err) {
+      if (err.response && err.response.status === 401) {
+        try {
+          const response = await axios.post(`${API}/token`, { token: refreshToken });
+          const newAccessToken = response.data.accessToken;
+
+          localStorage.setItem('accessToken', newAccessToken);
+          return next();
+        } catch (refreshError) {
+          console.error('Failed to refresh token:', refreshError);
+
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('refreshToken');
+          localStorage.removeItem('userinfo')
+          return next('/authenticate');
+        }
+      } else {
+        console.error('Error validating access token:', err);
+        return next('/authenticate');
+      }
+    }
+  }
+
+  // If route is 'authenticate' and user is already authenticated, redirect to the previous page or home
+  if (to.name === 'authenticate' && isAuthenticated) {
+    return next(from.fullPath || '/');
+  }
+
+  // Proceed normally for all other cases
+  next();
 });
+
 
 export default router

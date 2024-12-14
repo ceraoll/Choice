@@ -21,19 +21,36 @@
       </div>
     </div>
     <div class="flex justify-center w-full">
-      <LaptopTable :searchQuery="searchQuery" />
+      <LaptopTable :searchQuery="searchQuery" @showModalUpdate="handleModalUpdate" @showModalDelete="handleModalDelete" />
     </div>
   </div>
   <ModalLaptopForm :showModal="showModal" @close="showModal = false"/>
+  <ModalLaptopUpdateForm :showModal="showModalUpdate" :id_laptop="selectedIdLaptop ? selectedIdLaptop : 0" @close="showModalUpdate = false" />
+  <ModalConfirmation type="delete" :showModal="showModalDelete" :id_laptop="selectedIdLaptop ? selectedIdLaptop : 0" @close="showModalDelete = false;" />
 </template>
 
 <script setup>
 import LaptopTable from '../Tabel/LaptopTable.vue';
+import ModalLaptopUpdateForm from '../ModalLaptopUpdateForm.vue';
+import ModalConfirmation from '../ModalConfirmation.vue';
 import ModalLaptopForm from '../ModalLaptopForm.vue';
 import IconSearch from '../ui/IconSearch.vue';
 import { ref } from 'vue';
 
 const showModal = ref(false);
+const showModalUpdate = ref(false);
+const showModalDelete = ref(false);
+const selectedIdLaptop = ref(null);
 const searchQuery = ref('');
+
+const handleModalUpdate = (id_laptop) => {
+  selectedIdLaptop.value = id_laptop; 
+  showModalUpdate.value = true;
+};
+
+const handleModalDelete = (id_laptop) => {
+  selectedIdLaptop.value = id_laptop
+  showModalDelete.value = true;
+}
 
 </script>

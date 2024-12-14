@@ -4,7 +4,7 @@
     <div class="z-50 w-6/12 bg-white">
       <div>
         <div class="flex flex-row items-center justify-between px-8 py-8">
-          <h2 class="text-xl">Tambah Data Laptop</h2>
+          <h2 class="text-xl">Edit Data Laptop</h2>
           <span
             @click="handleCancel" 
             class="content-center w-8 h-8 text-center transition rounded-full cursor-pointer bg-slate-200 hover:bg-slate-300">X</span>
@@ -21,6 +21,7 @@
                 type="text"
                 label="Merk dan Tipe Laptop"
                 placeholder="Ex: Lenovo V14 G2"
+                :valueDefault="initialData.laptopType"
                 @bindValue="(e) => formData.laptopType = e "
                 />
             </div>
@@ -31,6 +32,7 @@
                 type="currency"
                 label="Harga"
                 placeholder="Rp."
+                :valueDefault="initialData.price"
                 @bindValue="(e) => formData.price = parseFloat(e) "
                 />
             </div>
@@ -41,6 +43,7 @@
                 type="decimal"
                 label="Berat"
                 placeholder="0.0 Kg"
+                :valueDefault="initialData.weight"
                 @bindValue="(e) => formData.weight = parseFloat(e) "
                 />
             </div>
@@ -51,6 +54,7 @@
                 :items="items.ROMCapacity" 
                 label="Kapasitas ROM"
                 placeholder="Ex: 8GB"
+                :valueDefault="initialData.ROMCapacity"
                 @bindValue="(e) => formData.ROMCapacity = e "
               /> 
             </div>
@@ -61,6 +65,7 @@
                 :items="items.RAMCapacity" 
                 label="Kapasitas RAM"
                 placeholder="Ex: 8GB"
+                :valueDefault="initialData.RAMCapacity"
                 @bindValue="(e) => formData.RAMCapacity = e "
               /> 
             </div>
@@ -71,6 +76,7 @@
                 :items="items.RAMSpeed" 
                 label="Kecepatan RAM"
                 placeholder="Ex: 3200Mhz"
+                :valueDefault="initialData.RAMSpeed"
                 @bindValue="(e) => formData.RAMSpeed = e "
               /> 
             </div>
@@ -81,15 +87,18 @@
                 :items="items.resolution" 
                 label="Resolusi Layar"
                 placeholder="Ex: FHD"
+                :valueDefault="initialData.resolution"
                 @bindValue="(e) => formData.resolution = e "
               /> 
             </div>
 
+            <!-- Processor -->
             <div class="my-8">
               <InputSelect
                 :items="items.processor"
                 label="Processor"
                 placeholder="Ex: Intel Core i7-13100K"
+                :valueDefault="initialData.processor"
                 @bindValue="(e) => formData.processor = e " 
               />
             </div>
@@ -107,9 +116,9 @@
             </button>
             <button
               type="submit"
-              class="px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600"
+              class="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
             >
-              Simpan
+              Update
             </button>
           </div>
         </form>
@@ -119,9 +128,9 @@
 </template>
 
 <script>
-import { reactive } from 'vue';
-import InputSelect from './forms/InputSelect.vue';
-import InputText from './forms/InputText.vue';
+import { reactive } from "vue";
+import InputSelect from "./forms/InputSelect.vue";
+import InputText from "./forms/InputText.vue";
 import {
   getBrand,
   getKapasitasROM,
@@ -131,17 +140,31 @@ import {
   getTipeProcessor,
   getGenerasiProcessor,
 } from "@/utils/useCriteria";
-import { insertLaptop } from "@/utils/useLaptop";
+import { fetchLaptopDetails, updateLaptop } from "@/utils/useLaptop";
 
 export default {
   props: {
     showModal: {
       type: Boolean,
       required: true
+    },
+    id_laptop: {
+      type: Number,
+      required: true,
     }
   },
   data() {
     return {
+      initialData: reactive({
+        laptopType: "",
+        price: "",
+        weight: "",
+        processor: "",
+        ROMCapacity: "",
+        RAMCapacity: "",
+        RAMSpeed: "",
+        resolution: "",
+      }),
       formData: reactive({
         laptopType: "",
         price: "",
@@ -152,27 +175,21 @@ export default {
         RAMSpeed: "",
         resolution: "",
       }),
-      brand: "",
       items: {
-        ROMCapacity: [
-        ],
-        RAMCapacity: [
-        ],
-        RAMSpeed: [
-        ],
-        resolution: [
-        ],
-        processor: [
-        ],
-      }
+        ROMCapacity: [],
+        RAMCapacity: [],
+        RAMSpeed: [],
+        resolution: [],
+        processor: [],
+      },
     };
   },
   components: {
-   InputSelect,
-   InputText
+    InputSelect,
+    InputText,
   },
   methods: {
-    async fetchData() {
+    async fetchItems() {
       try {
         const [
           brandData,
@@ -239,6 +256,28 @@ export default {
         this.loading = false; 
       }
     },
+    async fetchData() {
+      try {
+        const laptopDetails = await fetchLaptopDetails(this.id_laptop);
+        this.initialData = {
+          laptopType: laptopDetails.nama_laptop,
+          price: laptopDetails.harga.replace(/.00$/, ''),
+          weight: laptopDetails.berat,
+          ROMCapacity: laptopDetails.kapasitas_rom,
+          RAMCapacity: laptopDetails.kapasitas_ram,
+          RAMSpeed: laptopDetails.kecepatan_ram,
+          resolution: laptopDetails.resolusi,
+          processor: laptopDetails.processor,
+        };
+
+      } catch (error) {
+        console.error("Error fetching laptop details:", error);
+      }
+    },
+    async handleSubmit() {
+      if(this.validateForm(this.formData)) return;
+      await updateLaptop(this.id_laptop, this.formData);
+    },
     validateForm (value) {
       if (typeof value === 'object' && value !== null) {
         for (const v of Object.values(value)) {
@@ -253,22 +292,8 @@ export default {
         (typeof value === 'string' && value.trim().length === 0)
       );
     },
-    async handleSubmit() {
-      if(this.validateForm(this.formData)) return;
-      if(berat)
-      await insertLaptop(this.formData);
-    },
     handleCancel() {
-      this.formData = {
-        laptopType: "",
-        price: "",
-        weight: "",
-        processor: "",
-        ROMCapacity: "",
-        RAMCapacity: "",
-        RAMSpeed: "",
-      };
-      this.$emit('close');
+      this.$emit("close"); // Notify parent to close modal
     },
     handleKeydown(event) {
       if (event.key === "Escape" && this.showModal) {
@@ -277,6 +302,14 @@ export default {
     },
   },
   watch: {
+    id_laptop: {
+      immediate: true, // Fetch data on initial mount
+      handler(newId) {
+        if (newId) {
+          this.fetchData(newId);
+        }
+      },
+    },
     showModal(newVal) {
       if (newVal) {
         // Add keydown listener when modal is opened
@@ -287,12 +320,8 @@ export default {
       }
     },
   },
-  beforeUnmount() {
-    // Ensure listener is removed when component is destroyed
-    window.removeEventListener("keydown", this.handleKeydown);
-  },
   mounted() {
-    this.fetchData();
+    this.fetchItems();
   }
 };
 </script>

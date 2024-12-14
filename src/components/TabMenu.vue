@@ -3,7 +3,7 @@
     <button 
       v-for="tab in tabs" 
       :key="tab.id" 
-      :class="['font-semibold text-xl md:text-3xl transition hover:bg-gray-100 sm:px-8', 
+      :class="['font-semibold text-xl md:text-3xl transition hover:bg-gray-100 sm:px-8 active:bg-gray-200 active:text-gray-400', 
       { 'text-[#16436F]': tab.id === activeTab },
       { 'text-[#D9D9D9]': tab.id !== activeTab }]" 
       @click="selectTab(tab.id)"

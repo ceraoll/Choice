@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full overflow-x-auto">
+  <div class="w-full max-h-[calc(113*4px+65px)] md:max-h-[calc(113*4px+65px)] overflow-auto">
     <table class="min-w-[576px] table-auto border-collapse w-full bg-white shadow-md rounded-lg">
       <thead>
         <tr class="bg-[#E1E9F6] text-[#697E93]">
@@ -15,13 +15,11 @@
         <tr v-for="(row, index) in data" :key="index" class="bg-[#FCFCFC] hover:bg-gray-100 text-[#8196AA]">
           <td class="px-4 py-2 border border-[#708DAA]">{{ index+1 }}</td>
           <td v-for="(value, key) in row" :key="key" class="px-4 py-2 border border-[#708DAA]">
-            <div v-if="key == 'harga'" class="overflow-x-auto whitespace-nowrap max-w-32">
-              {{ value }}
-            </div>
-            <div v-else-if="key == 'berat'" class="overflow-x-auto whitespace-nowrap max-w-16">
-              {{ value }}
-            </div>
-            <div v-else>
+            <div :class="{
+              'overflow-x-auto whitespace-nowrap max-w-32': key === 'harga',
+              'overflow-x-auto whitespace-nowrap max-w-16': key === 'berat',
+              '': key !== 'harga' && key !== 'berat'
+            }">
               {{ value }}
             </div>
           </td>

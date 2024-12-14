@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full overflow-x-auto">
+  <div class="w-full max-h-[calc(113*4px+65px)] overflow-auto">
     <table class="min-w-[576px] table-auto border-collapse w-full bg-white shadow-md rounded-lg">
       <thead>
         <tr class="bg-[#E1E9F6] text-[#697E93]">
@@ -14,13 +14,29 @@
       <tbody v-if="filteredData.length">
         <tr v-for="(row, index) in filteredData" :key="index" class="bg-[#FCFCFC] hover:bg-gray-100 text-[#8196AA]">
           <td class="px-4 py-2 border border-[#708DAA]">{{ index+1 }}</td>
-          <td v-for="(value, key) in row" :key="key" class="px-4 py-2 border border-[#708DAA]">
+          <td v-for="(value, key) in filteredRow(row)" :key="key" class="px-4 py-2 border border-[#708DAA]" >
             <div :class="{
               'overflow-x-auto whitespace-nowrap max-w-32': key === 'harga',
               'overflow-x-auto whitespace-nowrap max-w-16': key === 'berat',
               '': key !== 'harga' && key !== 'berat'
             }">
               {{ value }}
+            </div>
+          </td>
+          <td class="px-4 py-2 border border-[#708DAA]">
+            <div class="flex flex-row items-center justify-center gap-2 font-semibold text-white">
+              <button 
+                class="px-1.5 py-1 bg-[#6DE0DC]"
+                @click="$emit('showModalUpdate', row.id_laptop)"
+              >
+                Edit
+              </button>
+              <button 
+                class="px-1.5 py-1 bg-[#E06D6D]"
+                @click="$emit('showModalDelete', row.id_laptop)"
+              >
+                Delete
+              </button>
             </div>
           </td>
         </tr>
@@ -65,15 +81,27 @@ export default {
       { id_header: "6", nama: "Kecepatan RAM" },
       { id_header: "7", nama: "Resolusi Layar" },
       { id_header: "8", nama: "Processor" },
+      { id_header: "9", nama: "Aksi"}
     ];
 
     const data = ref([]); 
-    const filteredData = ref([]); 
+    const filteredData = ref([]);
+
+    function filteredRow (row) {
+      const keysToSkip = ['id_laptop'];
+      return Object.entries(row).reduce((acc, [key, value]) => {
+        if (!keysToSkip.includes(key)) {
+          acc[key] = value;
+        }
+        return acc;
+      }, {});
+    }
 
     onMounted(async () => {
       try {
         const response = await getLaptop();
         data.value = response.map((laptop) => ({
+          id_laptop: laptop.id_laptop,
           nama: laptop.nama_laptop,
           harga: formatRupiah(Math.trunc(laptop.harga)),
           berat: laptop.berat + " KG",
@@ -106,7 +134,7 @@ export default {
       { immediate: true } 
     );
 
-    return { tableHeaders, filteredData, searchQuery };
+    return { tableHeaders, filteredData, searchQuery, filteredRow };
   },
 };
 </script>

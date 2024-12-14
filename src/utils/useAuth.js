@@ -5,6 +5,13 @@ import { reactive } from 'vue';
 import { useToast } from 'vue-toastification';
 const API = import.meta.env.VITE_CHOICE_API;
 
+axios.interceptors.response.use(
+  response => response,
+  error => {
+    // Tangani error di sini tanpa logging ke konsol
+    return Promise.reject(error);
+  }
+);
 
 const toast = useToast();
 
@@ -13,27 +20,25 @@ export const useAuthState = reactive({
 });
 
 export async function login(username, password) {
-  try {
-    const response = await axios.post(`${API}/login`, {
-      username: username,
-      password: password,
-    });
-
+  await axios.post(`${API}/login`, {
+    username: username,
+    password: password,
+  }).then((response) => {
     localStorage.setItem('accessToken', response.data.accessToken);
     localStorage.setItem('refreshToken', response.data.refreshToken);
 
-    localStorage.setItem('userInfo', JSON.stringify(response.data.userInfo));
+    localStorage.setItem('userinfo', JSON.stringify(response.data.userInfo));
 
     useAuthState.isLoggedIn = true;
     router.go(-1);
     toast.success("Successfully Login");
-  } catch (error) {
+  }).catch((error) => {
     if (error.response && error.response.data) {
-      toast.error(error.response.data.error); 
+      toast.error(error.response.data.error);
     } else {
       toast.error('Something went wrong. Please try again.');
     }
-  }
+  }) 
 }
 
 export async function register(username, password) {
@@ -71,11 +76,15 @@ export async function logout() {
   try {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
-    localStorage.removeItem('userInfo');
+    localStorage.removeItem('userinfo');
     useAuthState.isLoggedIn = false;
     
-    router.go();
-    toast.success("Successfully Logout");
+    const toastMessage = {
+      status: 'success',
+      message: 'Berhasil logout!',
+    };
+    localStorage.setItem('toastMessage', JSON.stringify(toastMessage));
+    router.go(0);
 
   } catch (error) {
     if (error.response && error.response.data) {
@@ -85,7 +94,7 @@ export async function logout() {
     }
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
-    localStorage.removeItem('userInfo');
+    localStorage.removeItem('userinfo');
     useAuthState.isLoggedIn = false;
   }
   

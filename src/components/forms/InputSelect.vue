@@ -11,13 +11,14 @@
       :placeholder="placeholder ?? label"
       :id="label"
       :type="type"
+      :value="search"
       :required="!!required"
       autocomplete="off"
       class="block w-full px-4 py-4 transition border rounded-sm border-slate-400 focus:shadow-sm focus:outline-none focus:border-slate-700"
     />
     <ul
       v-show="isOpen"
-      class="absolute z-50 w-full bg-white border shadow-sm"
+      class="absolute z-50 w-full bg-white border shadow-sm max-h-[calc(40*5px)] overflow-y-auto"
     >
       <li
         v-for="(result, i) in results"
@@ -42,6 +43,10 @@ export default {
       type: String,
       required: false,
     },
+    valueDefault: {
+      type: [String, Object],
+      required: false,
+    }, 
     items: {
       type: Array,
       required: false,
@@ -64,13 +69,30 @@ export default {
   },
   data() {
     return {
-      search: '',
+      search: this.valueDefault ? this.valueDefault : '',
       results: [],
       isOpen: false,
       arrowCounter: -1
     };
   },
+  watch: {
+    valueDefault: {
+      immediate: true, 
+      handler(newVal) {
+        this.search = newVal ? newVal : '';
+        const match = this.items.find(
+          (item) => item.label.toLowerCase() === this.search.toLowerCase()
+        );
+
+        if (match) {
+          this.$emit('bindValue', match);
+          this.arrowCounter = -1;
+        }
+      },
+    },
+  },
   mounted() {
+    if (this.search && this.search !== null && this.search !== '') this.filterResults();
     document.addEventListener('click', this.handleClickOutside);
   },
   destroyed() {
@@ -92,7 +114,7 @@ export default {
       if (match) {
         this.$emit('bindValue', match);
         this.arrowCounter = -1;
-      } 
+      }
     },
     setResult(result) {
       if (typeof result === 'object' && !Array.isArray(result) && result !== null) {

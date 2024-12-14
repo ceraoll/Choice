@@ -1,12 +1,30 @@
 <script>
 import Navbar from '@/components/Navbar.vue';
+import { useToast } from 'vue-toastification';
+const toast = useToast();
 export default {
   setup() {
     
   },
   components: {
     Navbar
-  }
+  },
+  mounted() {
+    const toastMessage = localStorage.getItem('toastMessage');
+    if (toastMessage) {
+      const { status, message } = JSON.parse(toastMessage);
+      if (status === 'success') {
+        requestAnimationFrame(() => {
+          toast.success(message);
+        })
+      } else if (status === 'error') {
+        requestAnimationFrame(() => {
+          toast.error(message);
+        })
+      }
+      localStorage.removeItem('toastMessage');
+    }
+  },
 }
 </script>
 <template>

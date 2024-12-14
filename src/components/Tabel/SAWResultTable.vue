@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full overflow-x-auto">
+  <div class="w-full max-h-[calc(113*4px+65px)] overflow-auto">
     <table class="min-w-[576px] table-auto border-collapse w-full bg-white shadow-md rounded-lg">
       <thead>
         <tr class="bg-[#E1E9F6] text-[#697E93]">
@@ -16,19 +16,17 @@
       <tbody v-if="data.length">
         <tr v-for="(row, index) in data" :key="index" class="bg-[#FCFCFC] hover:bg-gray-100 text-[#8196AA]">
           <td class="px-4 py-2 border border-[#708DAA] relative text-center max-w-16">
-            <img v-if="index == 0" src="/crown_6454551.png" alt="Winner badge" class="w-full">
+            <img v-if="index == 0" src="/crown_6454551.png" alt="Winner badge" class="block w-full rank">
             <div v-else>
               {{ index+1 }}
             </div>
           </td>
           <td v-for="(value, key) in row" :key="key" class="px-4 py-2 border border-[#708DAA]">
-            <div v-if="key == 'harga'" class="overflow-x-auto whitespace-nowrap max-w-32">
-              {{ value }}
-            </div>
-            <div v-else-if="key == 'berat'" class="overflow-x-auto whitespace-nowrap max-w-16">
-              {{ value }}
-            </div>
-            <div v-else>
+            <div :class="{
+              'overflow-x-auto whitespace-nowrap max-w-32': key === 'harga',
+              'overflow-x-auto whitespace-nowrap max-w-16': key === 'berat',
+              '': key !== 'harga' && key !== 'berat'
+            }">
               {{ value }}
             </div>
           </td>
@@ -195,3 +193,23 @@ export default {
   },
 };
 </script>
+
+
+<style scoped>
+  .rank {
+    filter: drop-shadow(0 0 10px rgba(204, 169, 44, 0.8));
+    animation: glow 2s ease-in-out infinite;
+  }
+
+  @keyframes glow {
+    0%, 100% {
+      filter: drop-shadow(0 0 5px rgba(204, 169, 44, 0.4));
+      transform: scale(0.99);
+    }
+    50% {
+      filter: drop-shadow(0 0 10px rgba(204, 169, 44, 0.6));
+      transform: scale(1);
+    }
+  }
+
+</style>

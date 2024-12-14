@@ -1,6 +1,6 @@
 <template>
   <main class="flex flex-col w-full h-full">
-    <div class="bg-[#D9D9D9] w-full h-1/2 flex items-center md:px-16">
+    <div class="bg-[#D9D9D9] w-full h-1/2 flex items-center md:px-16 md:py-0 py-4">
         <div class="text-6xl font-bold tracking-widest">
           <br>
           GET IN<br>
@@ -144,9 +144,10 @@ export default {
         usernameKosong: "Username tidak boleh kosong!",
         passwordKosong: "Password tidak boleh kosong!",
         minimalUsername: "Username setidaknya 4 karakter",
-        minimalPassword: "Password setidaknya 8 karakter",
+        minimalPassword: "Password setidaknya 6 karakter",
         konfirmasiPasswordKosong: "Isi konfirmasi password!",
-        konfirmasiPassword: "Password tidak sama!"
+        konfirmasiPassword: "Password tidak sama!",
+        usernameInvalid: "Username tidak tersedia!"
       }
     }
   },
@@ -177,7 +178,7 @@ export default {
         }
         if (!this.password || this.password.trim() === '') {
           messages.push(this.error.passwordKosong);
-        } else if (this.password.length < 8) {
+        } else if (this.password.length < 6) {
           messages.push(this.error.minimalPassword);
         }
 
@@ -190,6 +191,8 @@ export default {
         return true;
       } else {
 
+        if (!this.usernameAvailable) messages.push(this.error.usernameInvalid);
+
         if (!this.usernameRegister || this.usernameRegister.trim() === '') {
           messages.push(this.error.usernameKosong); 
         } else if (this.usernameRegister.length < 4) {
@@ -198,7 +201,7 @@ export default {
 
         if (!this.passwordRegister || this.passwordRegister.trim() === '') {
           messages.push(this.error.passwordKosong);
-        } else if (this.passwordRegister.length < 4) {
+        } else if (this.passwordRegister.length < 6) {
           messages.push(this.error.minimalPassword); 
         }
 
@@ -224,7 +227,7 @@ export default {
     },
 
     handleRegister() {
-      this.validateForm();
+      if (!this.validateForm()) return;
       this.loading = true;
       register(this.usernameRegister, this.passwordRegister);
       this.username = this.usernameRegister;

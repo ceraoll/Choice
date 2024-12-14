@@ -1,18 +1,25 @@
 <template>
-  <footer class="w-full flex flex-row items-center justify-between px-24 py-8 gap-16 shadow-darken-top">
+  <footer class="flex flex-row items-center justify-between w-full gap-16 px-8 py-8 md:px-24 shadow-darken-top">
     <div>
       <img src="/image/brand-logo.svg" alt="Choice">
     </div>
-    <div class="flex-grow flex">
+    <div class="flex flex-grow">
       <p class="text-sm lg:text-base">
         ©2024 Kelompok 3 - SPK. All rights reserved
       </p>
     </div>
     <div>
       <p class="text-sm lg:text-base">
-        <a href="#" class="text-[#486284] hover:underline">Terms & Conditions</a>
+        <button class="text-[#486284] hover:text-[#384e6a]" @click="showModal = true;">Terms & Conditions</button>
       </p>
     </div>
-    
   </footer>
+  <ModalConfirmation type="terms&conditions" :showModal="showModal" @close="showModal = false;" />
 </template>
+
+<script setup>
+import ModalConfirmation from './ModalConfirmation.vue';
+import { ref } from 'vue';
+
+const showModal = ref(false);
+</script>

@@ -10,7 +10,7 @@ function getToken() {
 }
 
 function getUserInfo() {
-  return JSON.parse(localStorage.getItem("userInfo"));
+  return JSON.parse(localStorage.getItem("userinfo"));
 }
 
 export async function getLaptop() {
@@ -29,6 +29,22 @@ export async function getLaptop() {
     return false;
   }
 }
+
+export async function fetchLaptopDetails(id_laptop) {
+  if (!id_laptop) return toast.error("Id laptop tidak ditemukan");
+  try {
+    const response = await axios.get(`${API}/laptop/${id_laptop}`, {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
+    return response.data;
+  } catch (err) {
+    toast.error("Gagal mendapatkan data laptop");
+    return false;
+  }
+}
+
 
 export async function getNilaiAlternatifLaptop() {
   try {
@@ -67,10 +83,64 @@ export async function insertLaptop(formData) {
         Authorization: `Bearer ${getToken()}`,
       },
     });
-    router.go(0);
     toast.success("Berhasil input Laptop!");
+    return true;
   } catch (err) {
     toast.error("Gagal input Laptop!");
+    return false;
+  }
+}
+
+export async function updateLaptop(id_laptop, formData) {
+  const { laptopType, price, weight, RAMCapacity, RAMSpeed, ROMCapacity, resolution, processor } = formData;
+  try {
+    await axios.put(`${API}/laptop/${id_laptop}/update`, {
+      nama_laptop: laptopType,
+      harga: price,
+      berat: parseFloat(weight),
+      kapasitas_rom: ROMCapacity,
+      kapasitas_ram: RAMCapacity,
+      kecepatan_ram: RAMSpeed,
+      resolusi: resolution,
+      processor: processor,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
+    const toastMessage = {
+      status: 'success',
+      message: 'Berhasil update Laptop!',
+    };
+    localStorage.setItem('toastMessage', JSON.stringify(toastMessage));
+    router.go(0);
+    return true;
+  } catch (err) {
+    toast.error("Gagal update Laptop!");
+    return false;
+  }
+}
+
+export async function deleteLaptop(id_laptop) {
+  try {
+    await axios.delete(`${API}/laptop/${id_laptop}/delete`, {
+      headers: {
+        Authorization: `Bearer ${getToken()}`
+      },
+    })
+    const toastMessage = {
+      status: 'success',
+      message: 'Berhasil delete Laptop!',
+    };
+    localStorage.setItem('toastMessage', JSON.stringify(toastMessage));
+    router.go(0);
+    return true;
+  } catch (err) {
+    console.error(err);
+    if (err.response) {
+      toast.error(err.response.data.error || "Gagal menghapus laptop!");
+    } 
     return false;
   }
 }
