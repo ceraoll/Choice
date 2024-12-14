@@ -84,10 +84,15 @@ export async function insertLaptop(formData) {
         },
       }
     );
-    toast.success("Berhasil input Laptop!");
+    const toastMessage = {
+      status: 'success',
+      message: 'Berhasil update Laptop!',
+    };
+    localStorage.setItem("toastMessage", JSON.stringify(toastMessage));
+    router.go(0)
     return true;
   } catch (err) {
-    toast.error("Gagal input Laptop!");
+    toast.error("Gagal input laptop");
     return false;
   }
 }
@@ -119,7 +124,7 @@ export async function updateLaptop(id_laptop, formData) {
       message: 'Berhasil update Laptop!',
     };
     localStorage.setItem('toastMessage', JSON.stringify(toastMessage));
-    router.go('/hitung');
+    router.go(0);
     return true;
   } catch (err) {
     toast.error("Gagal update Laptop!");

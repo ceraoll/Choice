@@ -275,7 +275,8 @@ export default {
       }
     },
     async handleSubmit() {
-      if(this.validateForm(this.formData)) return;
+      if (this.validateForm(this.formData)) return;
+      if (typeof this.formData.weight !== 'number') return;
       await updateLaptop(this.id_laptop, this.formData);
     },
     validateForm (value) {
