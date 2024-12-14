@@ -57,7 +57,7 @@ router.beforeEach(async (to, from, next) => {
 
       return next();
     } catch (err) {
-      if (err.response && err.response.status === 401) {
+      if (err.response) {
         try {
           const response = await axios.post(`${API}/token`, { token: refreshToken });
           const newAccessToken = response.data.accessToken;
