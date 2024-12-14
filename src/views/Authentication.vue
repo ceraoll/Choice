@@ -124,7 +124,8 @@
 </template>
 
 <script>
-import { checkUsername, login, logout, register, useAuthState } from "@/utils/useAuth";
+import { useAuthStore } from "@/stores/auth";
+import { checkUsername, login, register } from "@/utils/useAuth";
 import { useToast } from "vue-toastification";
 
 export default {
@@ -238,7 +239,7 @@ export default {
       this.loading = false;
       this.isRegister = false;
     },
-  }
+  },
 }
 </script>
 

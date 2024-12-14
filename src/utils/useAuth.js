@@ -1,44 +1,43 @@
 // src/utils/auth.js
 import router from '@/router';
 import axios from 'axios';
-import { reactive } from 'vue';
 import { useToast } from 'vue-toastification';
+import { useAuthStore } from '@/stores/auth'; // Import the Pinia store
+
 const API = import.meta.env.VITE_CHOICE_API;
 
 axios.interceptors.response.use(
-  response => response,
-  error => {
-    // Tangani error di sini tanpa logging ke konsol
-    return Promise.reject(error);
-  }
+  (response) => response,
+  (error) => Promise.reject(error)
 );
 
 const toast = useToast();
 
-export const useAuthState = reactive({
-  isLoggedIn: !!localStorage.getItem('accessToken'),
-});
-
 export async function login(username, password) {
-  await axios.post(`${API}/login`, {
-    username: username,
-    password: password,
-  }).then((response) => {
-    localStorage.setItem('accessToken', response.data.accessToken);
-    localStorage.setItem('refreshToken', response.data.refreshToken);
+  const authStore = useAuthStore(); // Access the store instance
+  try {
+    const response = await axios.post(`${API}/login`, {
+      username: username,
+      password: password,
+    });
 
-    localStorage.setItem('userinfo', JSON.stringify(response.data.userInfo));
+    // Update the store with user data and tokens
+    authStore.setAuthData(
+      response.data.userInfo,
+      response.data.accessToken,
+    );
 
-    useAuthState.isLoggedIn = true;
+    localStorage.setItem("refreshToken", response.data.refreshToken);
+
     router.go(-1);
     toast.success("Successfully Login");
-  }).catch((error) => {
+  } catch (error) {
     if (error.response && error.response.data) {
       toast.error(error.response.data.error);
     } else {
-      toast.error('Something went wrong. Please try again.');
+      toast.error("Something went wrong. Please try again.");
     }
-  }) 
+  }
 }
 
 export async function register(username, password) {
@@ -51,51 +50,39 @@ export async function register(username, password) {
     toast.success("Account successfully created");
   } catch (error) {
     if (error.response && error.response.data) {
-      toast.error(error.response.data.error); 
+      toast.error(error.response.data.error);
     } else {
-      toast.error('Something went wrong. Please try again.');
+      toast.error("Something went wrong. Please try again.");
     }
   }
 }
 
-export async function checkUsername (username) {
+export async function checkUsername(username) {
   try {
     const response = await axios.get(`${API}/check-username`, {
-      params: {
-        username: username,
-      },
+      params: { username },
     });
     return response.data.isAvailable;
-  } catch (err) {
-    console.error('Error checking username:', err);
-    throw err;
+  } catch (error) {
+    console.error("Error checking username:", error);
+    throw error;
   }
 }
 
 export async function logout() {
+  const authStore = useAuthStore(); // Access the store instance
   try {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('userinfo');
-    useAuthState.isLoggedIn = false;
-    
-    const toastMessage = {
-      status: 'success',
-      message: 'Berhasil logout!',
-    };
-    localStorage.setItem('toastMessage', JSON.stringify(toastMessage));
-    router.go(0);
+    localStorage.removeItem("refreshToken");
+    authStore.clearAuthData(); // Reset auth data in the store
 
+    const toastMessage = {
+      status: "success",
+      message: "Successfully logged out!",
+    };
+    localStorage.setItem("toastMessage", JSON.stringify(toastMessage));
+    router.go(0);
   } catch (error) {
-    if (error.response && error.response.data) {
-      toast.error(error.response.data.error); 
-    } else {
-      toast.error('Something went wrong. Please try again.');
-    }
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('userinfo');
-    useAuthState.isLoggedIn = false;
+    toast.error("Something went wrong. Please try again.");
+    authStore.clearAuthData(); // Reset auth data on error
   }
-  
 }

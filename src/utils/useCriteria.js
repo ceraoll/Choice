@@ -1,17 +1,17 @@
 import axios from 'axios';
 import { useToast } from 'vue-toastification';
+import { useAuthStore } from '@/stores/auth'; // Import the Pinia auth store
+
 const API = import.meta.env.VITE_CHOICE_API;
 const toast = useToast();
 
-
+// Helper to retrieve token from authStore
 function getToken() {
-  return localStorage.getItem("accessToken");
+  const authStore = useAuthStore();
+  return authStore.accessToken;
 }
 
-function getUserInfo() {
-  return JSON.parse(localStorage.getItem("userInfo"));
-}
-
+// API functions
 export async function getBrand() {
   try {
     const response = await axios.get(`${API}/brand`, {
@@ -115,7 +115,7 @@ export async function getCriteria() {
     const response = await axios.get(`${API}/criteria`);
     return response.data;
   } catch (err) {
-    toast.error("Gagal Mendapatkan Tipe Processor");
+    toast.error("Gagal Mendapatkan Data Criteria");
     return false;
   }
 }
