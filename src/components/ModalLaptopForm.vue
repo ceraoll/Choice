@@ -50,7 +50,7 @@
               <InputSelect 
                 :items="items.ROMCapacity" 
                 label="Kapasitas ROM"
-                placeholder="Ex: 8GB"
+                placeholder="Ex: 128 GB"
                 @bindValue="(e) => formData.ROMCapacity = e "
               /> 
             </div>
@@ -60,7 +60,7 @@
               <InputSelect 
                 :items="items.RAMCapacity" 
                 label="Kapasitas RAM"
-                placeholder="Ex: 8GB"
+                placeholder="Ex: 8 GB"
                 @bindValue="(e) => formData.RAMCapacity = e "
               /> 
             </div>
@@ -80,7 +80,7 @@
               <InputSelect 
                 :items="items.resolution" 
                 label="Resolusi Layar"
-                placeholder="Ex: FHD"
+                placeholder="Ex: Full HD"
                 @bindValue="(e) => formData.resolution = e "
               /> 
             </div>
@@ -89,7 +89,7 @@
               <InputSelect
                 :items="items.processor"
                 label="Processor"
-                placeholder="Ex: Intel Core i7-13100K"
+                placeholder="Ex: Intel Core i7 13th Gen"
                 @bindValue="(e) => formData.processor = e " 
               />
             </div>
