@@ -1,21 +1,36 @@
 <template>
   <div class="relative">
     <label :for="label" class="block text-xl font-medium">{{ label }}</label>
-    <input
-      v-model="search"
-      @input="onChange"
-      @keydown.down="onArrowDown"
-      @keydown.up="onArrowUp"
-      @keydown.enter="onEnter"
-      @keydown.tab="onTab"
-      :placeholder="placeholder ?? label"
-      :id="label"
-      :type="type"
-      :value="search"
-      :required="!!required"
-      autocomplete="off"
-      class="block w-full px-4 py-4 transition border rounded-sm border-slate-400 focus:shadow-sm focus:outline-none focus:border-slate-700"
-    />
+    <div class="relative grid items-center">
+      <input
+        v-model="search"
+        @input="onChange"
+        @keydown.down="onArrowDown"
+        @keydown.up="onArrowUp"
+        @keydown.enter="onEnter"
+        @keydown.tab="onTab"
+        :placeholder="placeholder ?? label"
+        :id="label"
+        :type="type"
+        :value="search"
+        :required="!!required"
+        autocomplete="off"
+        class="block w-full px-4 py-4 transition border rounded-sm border-slate-400 focus:shadow-sm focus:outline-none"
+        :class="{
+          'border-rose-700 ': valid === false
+        }"
+      />
+      <div class="!absolute pointer-events-none right-4" v-if="valid === true && search.length > 0">
+        <svg class="w-6 h-6 text-green-500"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </div>
+      <div class="!absolute pointer-events-none right-4" v-if="!valid && search.length > 0">
+        <svg class="w-6 h-6 text-red-500"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </div>
+    </div>
     <ul
       v-show="isOpen"
       class="absolute z-50 w-full bg-white border shadow-sm max-h-[calc(40*5px)] overflow-y-auto"
@@ -72,7 +87,8 @@ export default {
       search: this.valueDefault ? this.valueDefault : '',
       results: [],
       isOpen: false,
-      arrowCounter: -1
+      arrowCounter: -1,
+      valid: null,
     };
   },
   watch: {
@@ -85,7 +101,8 @@ export default {
         );
 
         if (match) {
-          this.$emit('bindValue', match);
+          this.valid = true;
+          if (this.valid) this.$emit('bindValue', match);
           this.arrowCounter = -1;
         }
       },
@@ -103,6 +120,8 @@ export default {
       this.results = this.items.filter(item => item.label.toLowerCase().indexOf(this.search.toLowerCase()) > -1);
     },
     onChange() {
+      this.loading = true;
+      this.valid = false;
       this.$emit('bindValue', '');
       this.filterResults();
       this.isOpen = true;
@@ -112,15 +131,17 @@ export default {
       );
 
       if (match) {
-        this.$emit('bindValue', match);
+        this.valid = true;
+        if (this.valid) this.$emit('bindValue', match);
         this.arrowCounter = -1;
       }
     },
     setResult(result) {
       if (typeof result === 'object' && !Array.isArray(result) && result !== null) {
+        this.valid = true;
         this.search = result.label;
         this.isOpen = false;
-        this.$emit('bindValue', result)
+        if (this.valid) this.$emit('bindValue', result);
         this.arrowCounter = -1;
       }
     },

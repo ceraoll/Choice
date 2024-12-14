@@ -60,19 +60,19 @@
                 class="col-span-3 px-6 py-4 border border-black rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
               <div
-                class="absolute right-5 inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] text-black"
+                class="absolute pointer-events-none right-5 inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] text-black"
                 role="status" v-if="checkingUsername">
                 <span
                   class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
                   >Loading...</span
                 >
               </div>
-              <div class="!absolute right-4" v-if="usernameAvailable && usernameRegister.length > 0">
+              <div class="!absolute pointer-events-none right-4" v-if="usernameAvailable && usernameRegister.length > 0">
                 <svg class="w-6 h-6 text-green-500"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
               </div>
-              <div class="!absolute right-4" v-if="!usernameAvailable && usernameRegister.length > 0">
+              <div class="!absolute pointer-events-none right-4" v-if="!usernameAvailable && usernameRegister.length > 0">
                 <svg class="w-6 h-6 text-red-500"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
