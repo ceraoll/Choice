@@ -1,8 +1,10 @@
 <script setup>
-import { ref, computed, reactive } from 'vue';
-import { useAuthState, logout } from '@/utils/useAuth';
+import { ref } from 'vue';
+import { useAuthStore } from "@/stores/auth";
+const authStore = useAuthStore(); // Access the store instance
+import { logout } from '@/utils/useAuth';
   
-  const authState = computed(() => {return useAuthState});
+  // const authStore = computed(() => {return authStore});
 	const mobileMenu = ref(false);
 
   function closeMobileMenu() { // happen when close button is clicked
@@ -53,7 +55,7 @@ import { useAuthState, logout } from '@/utils/useAuth';
           </div>
   
           <!-- Navigation Links -->
-          <div class="hidden md:flex space-x-8 text-[#486284]" v-if="!authState.isLoggedIn">
+          <div class="hidden md:flex space-x-8 text-[#486284]" v-if="!authStore.isLoggedIn">
             <router-link :to="{ name: 'authenticate' }" class="transition text-inherit hover:text-gray-800">Login</router-link>
           </div>
 
@@ -62,7 +64,7 @@ import { useAuthState, logout } from '@/utils/useAuth';
           </div>
           
           <!-- Button -->
-          <div v-if="authState.isLoggedIn">
+          <div v-if="authStore.isLoggedIn">
             <router-link
               :to="{name: 'hitung'}"
               class="bg-[#213C57] text-[#BB99A0] block font-bold tracking-wide px-8 py-2 rounded-lg hover:bg-[#192f46] transition"
@@ -104,7 +106,7 @@ import { useAuthState, logout } from '@/utils/useAuth';
         </router-link>
       </div>
       <!-- Navigation Links -->
-      <div class="text-[#486284] w-full" v-if="!authState.isLoggedIn">
+      <div class="text-[#486284] w-full" v-if="!authStore.isLoggedIn">
         <router-link 
           @click="toggleMobileMenu"
           :to="{ name: 'authenticate' }" 
