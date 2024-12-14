@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  choice-app:
+    container_name: choice-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4173:4173" # Map port untuk Vite Preview (default: 4173)
+    environment:
+      NODE_ENV: production # Set environment ke production
+    volumes:
+      - .:/app/choice # Sinkronisasi file lokal ke container (untuk pengembangan jika diperlukan)
+      - /app/choice/node_modules # Hindari node_modules dari sinkronisasi
+    command: npm run preview # Jalankan server produksi Vite
