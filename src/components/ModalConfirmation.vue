@@ -1,5 +1,5 @@
 <template>
-  <div v-if="showModal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 flex items-center justify-center w-full h-full overflow-x-hidden overflow-y-auto md:inset-0">
+  <div v-if="showModal" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 flex items-center justify-center w-full h-full overflow-x-hidden overflow-y-auto md:inset-0">
       <div class="absolute top-0 left-0 w-full h-full bg-black/70" @click="handleCancel"></div>
       <div 
         class="relative z-50 flex items-center w-full h-full md:h-auto"
